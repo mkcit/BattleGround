@@ -43,8 +43,8 @@ void ASoldierCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction(TEXT("PullLeaveTrigger"), EInputEvent::IE_Released, this, &ASoldierCharacter::LeaveTrigger);
 	PlayerInputComponent->BindAction(TEXT("ReloadArmory"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::ReloadArmory);
 	
-	PlayerInputComponent->BindAction(TEXT("PickUp"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::PickUp);
-	PlayerInputComponent->BindAction(TEXT("Leave"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::Leave);
+	PlayerInputComponent->BindAction(TEXT("PickUpWeapon"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::PickUpWeapon);
+	PlayerInputComponent->BindAction(TEXT("LeaveWeapon"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::LeaveWeapon);
 
 	
 
@@ -72,6 +72,14 @@ void ASoldierCharacter::IncreaseMovementRate(float AxisValue)
 }
 
 void ASoldierCharacter::DecreaseMovementRate(float AxisValue)
+{
+}
+
+void ASoldierCharacter::PickUpWeapon()
+{
+}
+
+void ASoldierCharacter::LeaveWeapon()
 {
 }
 

@@ -22,6 +22,9 @@ public:
 	void IncreaseMovementRate(float AxisValue);
 	void DecreaseMovementRate(float AxisValue);
 
+	void PickUpWeapon();
+	void LeaveWeapon();
+
 	void PullTrigger();
 	void LeaveTrigger();
 	void ReloadArmory();
