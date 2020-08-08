@@ -53,26 +53,46 @@ void ASoldierCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 void ASoldierCharacter::MoveForward(float AxisValue)
 {
+	AddMovementInput(GetActorForwardVector() * AxisValue * CharacterMovementSpeedRate);
 }
 
 void ASoldierCharacter::MoveRight(float AxisValue)
 {
+	AddMovementInput(GetActorRightVector() * AxisValue * CharacterMovementSpeedRate);
 }
 
 void ASoldierCharacter::LookUp(float AxisValue)
 {
+	AddControllerPitchInput(AxisValue * CharacterRotationSpeedRate * GetWorld()->GetDeltaSeconds());
 }
 
 void ASoldierCharacter::LookRight(float AxisValue)
 {
+	AddControllerYawInput(AxisValue * CharacterRotationSpeedRate * GetWorld()->GetDeltaSeconds());
 }
 
 void ASoldierCharacter::IncreaseMovementRate(float AxisValue)
 {
+	if (AxisValue > 0)
+	{
+		CharacterMovementSpeedRate = 0.9f;
+	}
+	else
+	{
+		CharacterMovementSpeedRate = 0.3f;
+	}
 }
 
 void ASoldierCharacter::DecreaseMovementRate(float AxisValue)
 {
+	if (AxisValue > 0)
+	{
+		CharacterMovementSpeedRate = 0.2f;
+	}
+	else
+	{
+		CharacterMovementSpeedRate = 0.3f;
+	}
 }
 
 void ASoldierCharacter::PickUpWeapon()
