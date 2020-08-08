@@ -73,25 +73,35 @@ void ASoldierCharacter::LookRight(float AxisValue)
 
 void ASoldierCharacter::IncreaseMovementRate(float AxisValue)
 {
-	if (AxisValue > 0)
+	if (!IsDecreasingCharacterMovementSpeedRate)
 	{
-		CharacterMovementSpeedRate = 0.9f;
-	}
-	else
-	{
-		CharacterMovementSpeedRate = 0.3f;
+		if (AxisValue > 0)
+		{
+			IsIncreasingCharacterMovementSpeedRate = true;
+			CharacterMovementSpeedRate = 0.9f;
+		}
+		else
+		{
+			IsIncreasingCharacterMovementSpeedRate = false;
+			CharacterMovementSpeedRate = 0.3f;
+		}
 	}
 }
 
 void ASoldierCharacter::DecreaseMovementRate(float AxisValue)
 {
-	if (AxisValue > 0)
+	if (!IsIncreasingCharacterMovementSpeedRate)
 	{
-		CharacterMovementSpeedRate = 0.2f;
-	}
-	else
-	{
-		CharacterMovementSpeedRate = 0.3f;
+		if (AxisValue > 0)
+		{
+			IsDecreasingCharacterMovementSpeedRate = true;
+			CharacterMovementSpeedRate = 0.2f;
+		}
+		else
+		{
+			IsDecreasingCharacterMovementSpeedRate = false;
+			CharacterMovementSpeedRate = 0.3f;
+		}
 	}
 }
 

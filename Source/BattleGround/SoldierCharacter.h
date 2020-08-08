@@ -47,6 +47,9 @@ private:
 	void ShowDownSightView();
 	void ShowMissileView();
 
+	bool IsIncreasingCharacterMovementSpeedRate = false;
+	bool IsDecreasingCharacterMovementSpeedRate = false;
+
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	float CharacterMovementSpeedRate = 0.3f;
