@@ -14,6 +14,8 @@ ASoldierCharacter::ASoldierCharacter()
 void ASoldierCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	StoreCameras();
 }
 
 // Called every frame
@@ -130,10 +132,22 @@ void ASoldierCharacter::ReloadArmory()
 
 void ASoldierCharacter::ShowFirstPersonView()
 {
+	FirstPersonViewCamera = Cameras.Find(FName("FirstPersonViewCamera"));
+	if (FirstPersonViewCamera)
+	{
+		DeActivateAllCameras();
+		(*FirstPersonViewCamera)->SetActive(true);
+	}
 }
 
 void ASoldierCharacter::ShowThirdPersonView()
 {
+	ThirdPersonViewCamera = Cameras.Find(FName("ThirdPersonViewCamera"));
+	if (ThirdPersonViewCamera)
+	{
+		DeActivateAllCameras();
+		(*ThirdPersonViewCamera)->SetActive(true);
+	}
 }
 
 void ASoldierCharacter::ShowDownSightView()
@@ -144,3 +158,27 @@ void ASoldierCharacter::ShowMissileView()
 {
 }
 
+/*****************************************************/
+
+void ASoldierCharacter::StoreCameras()
+{
+	Cameras.Empty();
+
+	TArray<UActorComponent*> CamerasList = GetComponentsByClass(UCameraComponent::StaticClass());
+	for (int i = 0; i < CamerasList.Num(); i++)
+	{
+		UCameraComponent* Camera = Cast<UCameraComponent>(CamerasList[i]);
+		if (Camera)
+			Cameras.Add(FName(Camera->GetName()), Camera);
+	}
+}
+
+void ASoldierCharacter::DeActivateAllCameras()
+{
+	bUseControllerRotationYaw = true;
+	for (const TPair<FName, UCameraComponent*>& Camera : Cameras)
+	{
+		if (Camera.Value != nullptr)
+			Camera.Value->SetActive(false);
+	}
+}

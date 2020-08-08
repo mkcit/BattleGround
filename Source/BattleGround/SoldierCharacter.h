@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
+#include "Camera/CameraComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "SoldierCharacter.generated.h"
@@ -47,6 +47,9 @@ private:
 	void ShowDownSightView();
 	void ShowMissileView();
 
+	void StoreCameras();
+	void DeActivateAllCameras();
+
 	bool IsIncreasingCharacterMovementSpeedRate = false;
 	bool IsDecreasingCharacterMovementSpeedRate = false;
 
@@ -56,4 +59,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	float CharacterRotationSpeedRate = 9.f;
+
+	UCameraComponent* const* FirstPersonViewCamera = nullptr;
+	UCameraComponent* const* ThirdPersonViewCamera = nullptr;
+	UCameraComponent* const* DownSightCamera = nullptr;
+	TMap<FName, UCameraComponent*> Cameras;
 };
