@@ -15,6 +15,17 @@ public:
 	// Sets default values for this character's properties
 	ASoldierCharacter();
 
+	void MoveForward(float AxisValue);
+	void MoveRight(float AxisValue);
+	void LookUp(float AxisValue);
+	void LookRight(float AxisValue);
+	void IncreaseMovementRate(float AxisValue);
+	void DecreaseMovementRate(float AxisValue);
+
+	void PullTrigger();
+	void LeaveTrigger();
+	void ReloadArmory();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -27,6 +38,13 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+
+	void ShowFirstPersonView();
+	void ShowThirdPersonView();
+	void ShowDownSightView();
+	void ShowMissileView();
+
+
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	float CharacterMovementSpeedRate = 0.3f;
 

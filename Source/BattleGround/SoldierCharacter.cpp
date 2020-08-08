@@ -11,7 +11,6 @@ ASoldierCharacter::ASoldierCharacter()
 
 }
 
-// Called when the game starts or when spawned
 void ASoldierCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -27,5 +26,83 @@ void ASoldierCharacter::Tick(float DeltaTime)
 void ASoldierCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ASoldierCharacter::MoveForward);
+	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &ASoldierCharacter::MoveRight);
+	PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &ASoldierCharacter::LookUp);
+	PlayerInputComponent->BindAxis(TEXT("LookRight"), this, &ASoldierCharacter::LookRight);
+	PlayerInputComponent->BindAxis(TEXT("IncreaseMovementRate"), this, &ASoldierCharacter::IncreaseMovementRate);
+	PlayerInputComponent->BindAxis(TEXT("DecreaseMovementRate"), this, &ASoldierCharacter::DecreaseMovementRate);
+
+	PlayerInputComponent->BindAction(TEXT("ShowFirstPersonView"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::ShowFirstPersonView);
+	PlayerInputComponent->BindAction(TEXT("ShowThirdPersonView"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::ShowThirdPersonView);
+	PlayerInputComponent->BindAction(TEXT("ShowDownSightView"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::ShowDownSightView);
+	PlayerInputComponent->BindAction(TEXT("ShowMissileView"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::ShowMissileView);
+	
+	PlayerInputComponent->BindAction(TEXT("PullLeaveTrigger"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::PullTrigger);
+	PlayerInputComponent->BindAction(TEXT("PullLeaveTrigger"), EInputEvent::IE_Released, this, &ASoldierCharacter::LeaveTrigger);
+	PlayerInputComponent->BindAction(TEXT("ReloadArmory"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::ReloadArmory);
+	
+	PlayerInputComponent->BindAction(TEXT("PickUp"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::PickUp);
+	PlayerInputComponent->BindAction(TEXT("Leave"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::Leave);
+
+	
+
+
+}
+
+void ASoldierCharacter::MoveForward(float AxisValue)
+{
+}
+
+void ASoldierCharacter::MoveRight(float AxisValue)
+{
+}
+
+void ASoldierCharacter::LookUp(float AxisValue)
+{
+}
+
+void ASoldierCharacter::LookRight(float AxisValue)
+{
+}
+
+void ASoldierCharacter::IncreaseMovementRate(float AxisValue)
+{
+}
+
+void ASoldierCharacter::DecreaseMovementRate(float AxisValue)
+{
+}
+
+void ASoldierCharacter::PullTrigger()
+{
+}
+
+void ASoldierCharacter::LeaveTrigger()
+{
+}
+
+void ASoldierCharacter::ReloadArmory()
+{
+}
+
+// Called when the game starts or when spawned
+
+
+void ASoldierCharacter::ShowFirstPersonView()
+{
+}
+
+void ASoldierCharacter::ShowThirdPersonView()
+{
+}
+
+void ASoldierCharacter::ShowDownSightView()
+{
+}
+
+void ASoldierCharacter::ShowMissileView()
+{
 }
 
