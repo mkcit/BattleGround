@@ -84,3 +84,6 @@ Content/SoldierCharacter/Mesh/Swat.uasset
 Content/SoldierCharacter/Mesh/Swat_PhysicsAsset.uasset
 Content/SoldierCharacter/Mesh/Swat_Skeleton.uasset
 Content/SoldierCharacter/SoldierCharacter_BP.uasset
+Content/HUD/GunWidget_BP.uasset
+Content/HUD/launcherMissileSystemWidget_Bp.uasset
+Content/Main.umap

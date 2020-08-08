@@ -26,4 +26,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+private:
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	float CharacterMovementSpeedRate = 0.3f;
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	float CharacterRotationSpeedRate = 9.f;
 };

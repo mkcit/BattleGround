@@ -15,20 +15,17 @@ ASoldierCharacter::ASoldierCharacter()
 void ASoldierCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void ASoldierCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
 void ASoldierCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
