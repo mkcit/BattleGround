@@ -72,3 +72,15 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+Content/SoldierCharacter/Materials/Soldier_body1.uasset
+Content/SoldierCharacter/Materials/Soldier_Body_diffuse.uasset
+Content/SoldierCharacter/Materials/Soldier_Body_normal.uasset
+Content/SoldierCharacter/Materials/Soldier_Body_specular.uasset
+Content/SoldierCharacter/Materials/Soldier_head6.uasset
+Content/SoldierCharacter/Materials/Soldier_head_diffuse.uasset
+Content/SoldierCharacter/Materials/Soldier_head_normal.uasset
+Content/SoldierCharacter/Materials/Soldier_head_specular.uasset
+Content/SoldierCharacter/Mesh/Swat.uasset
+Content/SoldierCharacter/Mesh/Swat_PhysicsAsset.uasset
+Content/SoldierCharacter/Mesh/Swat_Skeleton.uasset
+Content/SoldierCharacter/SoldierCharacter_BP.uasset
