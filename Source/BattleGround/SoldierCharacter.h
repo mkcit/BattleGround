@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "Kismet/KismetMathLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
@@ -28,6 +29,12 @@ public:
 	void PullTrigger();
 	void LeaveTrigger();
 	void ReloadArmory();
+
+	UFUNCTION(BlueprintPure)
+	float GetCharacterSpeed();
+
+	UFUNCTION(BlueprintPure)
+	float GetCharacterAngle();
 
 protected:
 	// Called when the game starts or when spawned

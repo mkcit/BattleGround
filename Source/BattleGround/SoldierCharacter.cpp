@@ -127,6 +127,20 @@ void ASoldierCharacter::ReloadArmory()
 {
 }
 
+float ASoldierCharacter::GetCharacterSpeed()
+{
+	return GetVelocity().Size();
+}
+
+float ASoldierCharacter::GetCharacterAngle()
+{
+	FVector Direction = GetActorForwardVector();
+	FTransform Transform = GetActorTransform();
+	FVector LocalDirection = UKismetMathLibrary::InverseTransformDirection(Transform, Direction);
+	FRotator LocalRotation = LocalDirection.Rotation();
+	return LocalRotation.Yaw;
+}
+
 // Called when the game starts or when spawned
 
 
