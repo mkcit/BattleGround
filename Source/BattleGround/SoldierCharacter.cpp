@@ -134,7 +134,7 @@ float ASoldierCharacter::GetCharacterSpeed()
 
 float ASoldierCharacter::GetCharacterAngle()
 {
-	FVector Direction = GetActorForwardVector();
+	FVector Direction = GetVelocity().GetSafeNormal();
 	FTransform Transform = GetActorTransform();
 	FVector LocalDirection = UKismetMathLibrary::InverseTransformDirection(Transform, Direction);
 	FRotator LocalRotation = LocalDirection.Rotation();
