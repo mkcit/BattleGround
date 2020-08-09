@@ -85,7 +85,7 @@ void ASoldierCharacter::IncreaseMovementRate(float AxisValue)
 		else
 		{
 			IsIncreasingCharacterMovementSpeedRate = false;
-			CharacterMovementSpeedRate = 0.3f;
+			CharacterMovementSpeedRate = 0.5f;
 		}
 	}
 }
@@ -97,12 +97,12 @@ void ASoldierCharacter::DecreaseMovementRate(float AxisValue)
 		if (AxisValue > 0)
 		{
 			IsDecreasingCharacterMovementSpeedRate = true;
-			CharacterMovementSpeedRate = 0.2f;
+			CharacterMovementSpeedRate = 0.3f;
 		}
 		else
 		{
 			IsDecreasingCharacterMovementSpeedRate = false;
-			CharacterMovementSpeedRate = 0.3f;
+			CharacterMovementSpeedRate = 0.5f;
 		}
 	}
 }

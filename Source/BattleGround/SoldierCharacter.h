@@ -62,7 +62,7 @@ private:
 
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
-	float CharacterMovementSpeedRate = 0.3f;
+	float CharacterMovementSpeedRate = 0.5f;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	float CharacterRotationSpeedRate = 9.f;
