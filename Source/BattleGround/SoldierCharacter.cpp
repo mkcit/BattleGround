@@ -36,6 +36,8 @@ void ASoldierCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis(TEXT("IncreaseMovementRate"), this, &ASoldierCharacter::IncreaseMovementRate);
 	PlayerInputComponent->BindAxis(TEXT("DecreaseMovementRate"), this, &ASoldierCharacter::DecreaseMovementRate);
 
+
+	PlayerInputComponent->BindAction(TEXT("Crouch"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::Crouch);
 	PlayerInputComponent->BindAction(TEXT("ShowFirstPersonView"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::ShowFirstPersonView);
 	PlayerInputComponent->BindAction(TEXT("ShowThirdPersonView"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::ShowThirdPersonView);
 	PlayerInputComponent->BindAction(TEXT("ShowDownSightView"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::ShowDownSightView);
@@ -65,12 +67,12 @@ void ASoldierCharacter::MoveRight(float AxisValue)
 
 void ASoldierCharacter::LookUp(float AxisValue)
 {
-	AddControllerPitchInput(AxisValue * CharacterRotationSpeedRate * GetWorld()->GetDeltaSeconds());
+	AddControllerPitchInput(AxisValue * DefaultCharacterRotationSpeedRate * GetWorld()->GetDeltaSeconds());
 }
 
 void ASoldierCharacter::LookRight(float AxisValue)
 {
-	AddControllerYawInput(AxisValue * CharacterRotationSpeedRate * GetWorld()->GetDeltaSeconds());
+	AddControllerYawInput(AxisValue * DefaultCharacterRotationSpeedRate * GetWorld()->GetDeltaSeconds());
 }
 
 void ASoldierCharacter::IncreaseMovementRate(float AxisValue)
@@ -79,13 +81,14 @@ void ASoldierCharacter::IncreaseMovementRate(float AxisValue)
 	{
 		if (AxisValue > 0)
 		{
-			IsIncreasingCharacterMovementSpeedRate = true;
-			CharacterMovementSpeedRate = 0.9f;
+			IsIncreasingCharacterMovementSpeedRate = true; 
+			CharacterMovementSpeedRate = DefaultCharacterMovementSpeedRate * GetSpeedFactor();
+			//CharacterMovementSpeedRate = 0.9f;
 		}
 		else
 		{
 			IsIncreasingCharacterMovementSpeedRate = false;
-			CharacterMovementSpeedRate = 0.5f;
+			CharacterMovementSpeedRate = DefaultCharacterMovementSpeedRate;
 		}
 	}
 }
@@ -97,12 +100,13 @@ void ASoldierCharacter::DecreaseMovementRate(float AxisValue)
 		if (AxisValue > 0)
 		{
 			IsDecreasingCharacterMovementSpeedRate = true;
-			CharacterMovementSpeedRate = 0.3f;
+			CharacterMovementSpeedRate = DefaultCharacterMovementSpeedRate * 0.6f;
+			//CharacterMovementSpeedRate = 0.3f;
 		}
 		else
 		{
 			IsDecreasingCharacterMovementSpeedRate = false;
-			CharacterMovementSpeedRate = 0.5f;
+			CharacterMovementSpeedRate = DefaultCharacterMovementSpeedRate;
 		}
 	}
 }
@@ -127,12 +131,25 @@ void ASoldierCharacter::ReloadArmory()
 {
 }
 
-float ASoldierCharacter::GetCharacterSpeed()
+void ASoldierCharacter::Crouch()
+{
+	IsSoldierCharacterCrouchingNow = !IsSoldierCharacterCrouchingNow;
+	if (IsSoldierCharacterCrouchingNow)
+	{
+		DefaultCharacterMovementSpeedRate = 0.25f;
+	}
+	else
+	{
+		DefaultCharacterMovementSpeedRate = 0.5f;
+	}
+}
+
+float ASoldierCharacter::GetSoldierCharacterSpeed()
 {
 	return GetVelocity().Size();
 }
 
-float ASoldierCharacter::GetCharacterAngle()
+float ASoldierCharacter::GetSoldierCharacterAngle()
 {
 	FVector Direction = GetVelocity().GetSafeNormal();
 	FTransform Transform = GetActorTransform();
@@ -143,6 +160,11 @@ float ASoldierCharacter::GetCharacterAngle()
 
 // Called when the game starts or when spawned
 
+
+bool ASoldierCharacter::GetIfSoldierCharacterIsCrouchingNow()
+{
+	return IsSoldierCharacterCrouchingNow;
+}
 
 void ASoldierCharacter::ShowFirstPersonView()
 {
@@ -195,4 +217,18 @@ void ASoldierCharacter::DeActivateAllCameras()
 		if (Camera.Value != nullptr)
 			Camera.Value->SetActive(false);
 	}
+}
+
+float ASoldierCharacter::GetSpeedFactor()
+{
+	float Rate;
+	if (IsSoldierCharacterCrouchingNow)
+	{
+		Rate = 3.7f;
+	}
+	else
+	{
+		Rate = 1.8f;
+	}
+	return Rate;
 }

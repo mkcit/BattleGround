@@ -29,12 +29,9 @@ public:
 	void PullTrigger();
 	void LeaveTrigger();
 	void ReloadArmory();
+	void Crouch();
 
-	UFUNCTION(BlueprintPure)
-	float GetCharacterSpeed();
-
-	UFUNCTION(BlueprintPure)
-	float GetCharacterAngle();
+	
 
 protected:
 	// Called when the game starts or when spawned
@@ -49,6 +46,16 @@ public:
 
 private:
 
+	UFUNCTION(BlueprintPure)
+	float GetSoldierCharacterSpeed();
+
+	UFUNCTION(BlueprintPure)
+	float GetSoldierCharacterAngle();
+
+	UFUNCTION(BlueprintPure)
+	bool GetIfSoldierCharacterIsCrouchingNow();
+
+
 	void ShowFirstPersonView();
 	void ShowThirdPersonView();
 	void ShowDownSightView();
@@ -56,16 +63,20 @@ private:
 
 	void StoreCameras();
 	void DeActivateAllCameras();
+	float GetSpeedFactor(); 
 
 	bool IsIncreasingCharacterMovementSpeedRate = false;
 	bool IsDecreasingCharacterMovementSpeedRate = false;
+	bool IsSoldierCharacterCrouchingNow = false;
 
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
-	float CharacterMovementSpeedRate = 0.5f;
+	float DefaultCharacterMovementSpeedRate = 0.5f;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
-	float CharacterRotationSpeedRate = 9.f;
+	float DefaultCharacterRotationSpeedRate = 9.f;
+
+	float CharacterMovementSpeedRate;
 
 	UCameraComponent* const* FirstPersonViewCamera = nullptr;
 	UCameraComponent* const* ThirdPersonViewCamera = nullptr;
