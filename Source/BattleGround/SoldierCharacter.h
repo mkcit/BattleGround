@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "GunActor.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "CoreMinimal.h"
@@ -55,6 +56,12 @@ private:
 
 	UFUNCTION(BlueprintPure)
 	bool GetIfSoldierCharacterIsCrouchingNow();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AGunActor> GunActorClass;
+
+	UPROPERTY()
+	AGunActor* GunActor = nullptr;
 
 
 	void ShowFirstPersonView();

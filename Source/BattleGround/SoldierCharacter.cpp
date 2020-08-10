@@ -16,6 +16,17 @@ void ASoldierCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	StoreCameras();
+
+	GunActor = GetWorld()->SpawnActor<AGunActor>(GunActorClass);
+	if (GunActor)
+	{
+		GunActor->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("GunSocket"));
+		GunActor->SetOwner(this);
+
+		//Gun->SpawnProjectile();
+		/*CurrentBulletsCount = Gun->GetMaxBulletsCount();
+		CurrentBulletsCountInArmory = Gun->GetMaxCountBulletsInArmory();*/
+	}
 }
 
 // Called every frame
@@ -49,8 +60,6 @@ void ASoldierCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	
 	PlayerInputComponent->BindAction(TEXT("PickUpWeapon"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::PickUpWeapon);
 	PlayerInputComponent->BindAction(TEXT("LeaveWeapon"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::LeaveWeapon);
-
-	
 
 
 }
@@ -157,8 +166,6 @@ float ASoldierCharacter::GetSoldierCharacterAngle()
 	FRotator LocalRotation = LocalDirection.Rotation();
 	return LocalRotation.Yaw;
 }
-
-// Called when the game starts or when spawned
 
 
 bool ASoldierCharacter::GetIfSoldierCharacterIsCrouchingNow()
