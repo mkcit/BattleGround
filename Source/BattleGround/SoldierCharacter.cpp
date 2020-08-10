@@ -82,7 +82,7 @@ void ASoldierCharacter::IncreaseMovementRate(float AxisValue)
 		if (AxisValue > 0)
 		{
 			IsIncreasingCharacterMovementSpeedRate = true; 
-			CharacterMovementSpeedRate = DefaultCharacterMovementSpeedRate * GetSpeedFactor();
+			CharacterMovementSpeedRate = DefaultCharacterMovementSpeedRate * GetSpeedFactor()[0];
 			//CharacterMovementSpeedRate = 0.9f;
 		}
 		else
@@ -100,7 +100,7 @@ void ASoldierCharacter::DecreaseMovementRate(float AxisValue)
 		if (AxisValue > 0)
 		{
 			IsDecreasingCharacterMovementSpeedRate = true;
-			CharacterMovementSpeedRate = DefaultCharacterMovementSpeedRate * 0.6f;
+			CharacterMovementSpeedRate = DefaultCharacterMovementSpeedRate * GetSpeedFactor()[1];
 			//CharacterMovementSpeedRate = 0.3f;
 		}
 		else
@@ -219,16 +219,18 @@ void ASoldierCharacter::DeActivateAllCameras()
 	}
 }
 
-float ASoldierCharacter::GetSpeedFactor()
+float* ASoldierCharacter::GetSpeedFactor()
 {
-	float Rate;
+	static float Speedrate[2];
 	if (IsSoldierCharacterCrouchingNow)
 	{
-		Rate = 3.7f;
+		Speedrate[0] = 3.7f; // Increasing
+		Speedrate[1] = 1.f; // Decreasing
 	}
 	else
 	{
-		Rate = 1.8f;
+		Speedrate[0] = 1.8f; // Increasing
+		Speedrate[1] = 0.6f; // Decreasing
 	}
-	return Rate;
+	return Speedrate;
 }

@@ -45,6 +45,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
+	
 
 	UFUNCTION(BlueprintPure)
 	float GetSoldierCharacterSpeed();
@@ -63,7 +64,7 @@ private:
 
 	void StoreCameras();
 	void DeActivateAllCameras();
-	float GetSpeedFactor(); 
+	float* GetSpeedFactor();
 
 	bool IsIncreasingCharacterMovementSpeedRate = false;
 	bool IsDecreasingCharacterMovementSpeedRate = false;
