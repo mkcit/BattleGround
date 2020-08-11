@@ -77,6 +77,7 @@ void ASoldierCharacter::MoveRight(float AxisValue)
 void ASoldierCharacter::LookUp(float AxisValue)
 {
 	AddControllerPitchInput(AxisValue * DefaultCharacterRotationSpeedRate * GetWorld()->GetDeltaSeconds());
+	CalculateTheAngle();
 }
 
 void ASoldierCharacter::LookRight(float AxisValue)
@@ -195,6 +196,13 @@ void ASoldierCharacter::ShowThirdPersonView()
 
 void ASoldierCharacter::ShowDownSightView()
 {
+	DownSightViewCamera = Cameras.Find(FName("DownSightViewCamera"));
+
+	if (DownSightViewCamera)
+	{
+		DeActivateAllCameras();
+		(*DownSightViewCamera)->SetActive(true);
+	}
 }
 
 void ASoldierCharacter::ShowMissileView()
@@ -240,4 +248,25 @@ float* ASoldierCharacter::GetSpeedFactor()
 		Speedrate[1] = 0.6f; // Decreasing
 	}
 	return Speedrate;
+}
+
+void ASoldierCharacter::CalculateTheAngle()
+{
+	FRotator EyeRotation = GetControlRotation();
+	float UpDownAngle = EyeRotation.Pitch;
+
+	if (UpDownAngle > 180)
+		BoneRotatonAngle = 360 - UpDownAngle;
+	else
+		BoneRotatonAngle = UpDownAngle * (-1);
+
+	// We have three bones
+	BoneRotatonAngle = (BoneRotatonAngle / 3);
+}
+
+FRotator ASoldierCharacter::GetBoneRotation() const
+{
+	FRotator BoneRotation(0, 0, BoneRotatonAngle);
+
+	return BoneRotation;
 }

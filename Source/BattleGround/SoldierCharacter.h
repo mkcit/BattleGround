@@ -55,6 +55,9 @@ private:
 	float GetSoldierCharacterAngle();
 
 	UFUNCTION(BlueprintPure)
+	FRotator GetBoneRotation() const;
+
+	UFUNCTION(BlueprintPure)
 	bool GetIfSoldierCharacterIsCrouchingNow();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
@@ -70,7 +73,8 @@ private:
 	void ShowMissileView();
 
 	void StoreCameras();
-	void DeActivateAllCameras();
+	void DeActivateAllCameras(); 
+	void CalculateTheAngle();
 	float* GetSpeedFactor();
 
 	bool IsIncreasingCharacterMovementSpeedRate = false;
@@ -85,9 +89,10 @@ private:
 	float DefaultCharacterRotationSpeedRate = 9.f;
 
 	float CharacterMovementSpeedRate;
+	float BoneRotatonAngle;
 
 	UCameraComponent* const* FirstPersonViewCamera = nullptr;
 	UCameraComponent* const* ThirdPersonViewCamera = nullptr;
-	UCameraComponent* const* DownSightCamera = nullptr;
+	UCameraComponent* const* DownSightViewCamera = nullptr;
 	TMap<FName, UCameraComponent*> Cameras;
 };
