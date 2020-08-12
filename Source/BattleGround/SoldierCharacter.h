@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "Components/Image.h"
 #include "GunActor.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Camera/CameraComponent.h"
@@ -32,7 +33,7 @@ public:
 	void ReloadGunMagazine();
 	void Crouch();
 
-	
+	AGunActor* GetGunActor();
 
 protected:
 	// Called when the game starts or when spawned
@@ -91,8 +92,18 @@ private:
 	float CharacterMovementSpeedRate;
 	float BoneRotatonAngle;
 
+	UFUNCTION(BlueprintPure)
+	FVector2D GetScreenPosition();
+
 	UCameraComponent* const* FirstPersonViewCamera = nullptr;
 	UCameraComponent* const* ThirdPersonViewCamera = nullptr;
 	UCameraComponent* const* DownSightViewCamera = nullptr;
 	TMap<FName, UCameraComponent*> Cameras;
+
+	UImage* Image_Up = nullptr;
+	UImage* Image_Down = nullptr;
+	UImage* Image_Right = nullptr;
+	UImage* Image_Left = nullptr;
+
+	FVector2D ScreenLocation;
 };

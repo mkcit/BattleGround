@@ -29,6 +29,24 @@ void AGunActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (PlayerController)
+	{
+		FVector OUT LineStart = Mesh->GetSocketTransform(FName("Muzzle")).GetLocation();
+		FVector Direction = Mesh->GetSocketTransform(FName("Muzzle")).GetRotation().Vector();
+		FVector OUT LineEnd = LineStart + Direction * 60000;
+
+		//DrawDebugLine(GetWorld(), LineStart, LineEnd, FColor::Red, false, 0.f, 0, 2.f);
+		FHitResult Hit;
+		bool Success = GetWorld()->LineTraceSingleByChannel(Hit, LineStart, LineEnd, ECollisionChannel::ECC_Visibility);
+
+		if (Success)
+		{
+			FVector HitLocation = Hit.Location;
+			PlayerController->ProjectWorldLocationToScreen(HitLocation, ScreenLocation);
+		}
+	}
+
 }
 
 void AGunActor::SpawnProjectile()
@@ -75,5 +93,10 @@ int32 AGunActor::GetMaxBulletsCount()
 int32 AGunActor::GetMaxCountBulletsInMagazine()
 {
 	return MaxCountBulletsInMagazine;
+}
+
+FVector2D AGunActor::GetScreenLocation()
+{
+	return ScreenLocation;
 }
 

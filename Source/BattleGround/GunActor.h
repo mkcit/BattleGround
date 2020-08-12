@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "DrawDebugHelpers.h"
 #include "GunProjectileActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -30,6 +31,8 @@ public:
 
 	int32 GetMaxBulletsCount();
 	int32 GetMaxCountBulletsInMagazine();
+
+	FVector2D  GetScreenLocation();
 
 protected:
 	// Called when the game starts or when spawned
@@ -61,4 +64,6 @@ private:
 		TSubclassOf<AGunProjectileActor> GunProjectileActorClass;
 
 	AGunProjectileActor* GunProjectileActor = nullptr;
+
+	FVector2D OUT ScreenLocation;
 };

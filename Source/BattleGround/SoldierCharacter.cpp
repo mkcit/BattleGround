@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "SoldierPlayerController.h"
 #include "SoldierCharacter.h"
 
 // Sets default values
@@ -22,17 +22,43 @@ void ASoldierCharacter::BeginPlay()
 	{
 		GunActor->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("GunSocket"));
 		GunActor->SetOwner(this);
-
-		//Gun->SpawnProjectile();
-		/*CurrentBulletsCount = Gun->GetMaxBulletsCount();
-		CurrentBulletsCountInArmory = Gun->GetMaxCountBulletsInArmory();*/
 	}
+
+
+	/*APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (PlayerController)
+	{
+		ASoldierPlayerController* SoldierPlayerController = Cast< ASoldierPlayerController>(PlayerController);
+		if (SoldierPlayerController)
+		{
+			Image_Up = SoldierPlayerController->GetImageByName("Image_Up");
+			Image_Down = SoldierPlayerController->GetImageByName("Image_Down");
+			Image_Right = SoldierPlayerController->GetImageByName("Image_Right");
+			Image_Left = SoldierPlayerController->GetImageByName("Image_Left");
+		}
+	}*/
+	
 }
 
 // Called every frame
 void ASoldierCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	//if (!Image_Up || !Image_Down || !Image_Right || !Image_Left) return;
+	//if(GunActor)
+	//{
+	//	ScreenLocation = GunActor->GetScreenLocation();
+	//	//UE_LOG(LogTemp, Warning, TEXT("%s"), *ScreenLocation.ToString());
+	//	/*ScreenLocation.X = 700;
+	//	ScreenLocation.Y = 100;*/
+
+	//	/*Image_Up->SetRenderTranslation(ScreenLocation);
+	//	Image_Down->SetRenderTranslation(ScreenLocation);
+
+	//	Image_Right->SetRenderTranslation(ScreenLocation);
+	//	Image_Left->SetRenderTranslation(ScreenLocation);*/
+	//}
 }
 
 // Called to bind functionality to input
@@ -154,6 +180,11 @@ void ASoldierCharacter::Crouch()
 	}
 }
 
+AGunActor* ASoldierCharacter::GetGunActor()
+{
+	return GunActor;
+}
+
 float ASoldierCharacter::GetSoldierCharacterSpeed()
 {
 	return GetVelocity().Size();
@@ -248,6 +279,11 @@ float* ASoldierCharacter::GetSpeedFactor()
 		Speedrate[1] = 0.6f; // Decreasing
 	}
 	return Speedrate;
+}
+
+FVector2D ASoldierCharacter::GetScreenPosition()
+{
+	return ScreenLocation;
 }
 
 void ASoldierCharacter::CalculateTheAngle()
