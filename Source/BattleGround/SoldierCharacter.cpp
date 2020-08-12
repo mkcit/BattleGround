@@ -56,7 +56,7 @@ void ASoldierCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	
 	PlayerInputComponent->BindAction(TEXT("PullLeaveTrigger"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::PullTrigger);
 	PlayerInputComponent->BindAction(TEXT("PullLeaveTrigger"), EInputEvent::IE_Released, this, &ASoldierCharacter::LeaveTrigger);
-	PlayerInputComponent->BindAction(TEXT("ReloadArmory"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::ReloadArmory);
+	PlayerInputComponent->BindAction(TEXT("ReloadGunMagazine"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::ReloadGunMagazine);
 	
 	PlayerInputComponent->BindAction(TEXT("PickUpWeapon"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::PickUpWeapon);
 	PlayerInputComponent->BindAction(TEXT("LeaveWeapon"), EInputEvent::IE_Pressed, this, &ASoldierCharacter::LeaveWeapon);
@@ -137,7 +137,7 @@ void ASoldierCharacter::LeaveTrigger()
 {
 }
 
-void ASoldierCharacter::ReloadArmory()
+void ASoldierCharacter::ReloadGunMagazine()
 {
 }
 

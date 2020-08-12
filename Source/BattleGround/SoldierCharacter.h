@@ -29,7 +29,7 @@ public:
 
 	void PullTrigger();
 	void LeaveTrigger();
-	void ReloadArmory();
+	void ReloadGunMagazine();
 	void Crouch();
 
 	
