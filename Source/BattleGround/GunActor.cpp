@@ -29,6 +29,12 @@ void AGunActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	SetupGunDirection();
+
+}
+
+void AGunActor::SetupGunDirection()
+{
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	if (PlayerController)
 	{
@@ -36,25 +42,25 @@ void AGunActor::Tick(float DeltaTime)
 		FVector Direction = Mesh->GetSocketTransform(FName("Muzzle")).GetRotation().Vector();
 		FVector OUT LineEnd = LineStart + Direction * 60000;
 
-		//DrawDebugLine(GetWorld(), LineStart, LineEnd, FColor::Red, false, 0.f, 0, 2.f);
+		DrawDebugLine(GetWorld(), LineStart, LineEnd, FColor::Red, false, 0.f, 0, 2.f);
 		FHitResult Hit;
-		bool Success = GetWorld()->LineTraceSingleByChannel(Hit, LineStart, LineEnd, ECollisionChannel::ECC_Visibility);
+		bool Success = GetWorld()->LineTraceSingleByChannel(Hit, LineStart, LineEnd, ECollisionChannel::ECC_GameTraceChannel1);
 
 		if (Success)
 		{
 			FVector HitLocation = Hit.Location;
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *Hit.GetActor()->GetName());
 			PlayerController->ProjectWorldLocationToScreen(HitLocation, ScreenLocation);
 		}
 	}
-
 }
 
 void AGunActor::SpawnProjectile()
 {
 	if (!Mesh) return;
 
-	FVector MuzzleLocation = Mesh->GetSocketLocation(FName("Projectile"));
-	FRotator MuzzleRotation = Mesh->GetSocketRotation(FName("Projectile"));
+	FVector MuzzleLocation = Mesh->GetSocketLocation(FName("Muzzle"));
+	FRotator MuzzleRotation = Mesh->GetSocketRotation(FName("Muzzle"));
 
 
 	GunProjectileActor = GetWorld()->SpawnActor<AGunProjectileActor>(GunProjectileActorClass, MuzzleLocation, MuzzleRotation);
@@ -68,6 +74,23 @@ void AGunActor::SpawnProjectile()
 
 void AGunActor::PullTrigger()
 {
+	/*APawn* OwnerPawn = Cast<APawn>(GetOwner());
+	if (!OwnerPawn) return;
+
+	AController* Controller = OwnerPawn->GetController();
+	if (!Controller) return;
+
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	if (!PlayerController) return;*/
+
+
+	UParticleSystemComponent* MuzzleFlashComponent = UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, Mesh, FName("Muzzle"));
+	if (!MuzzleFlashComponent) return;
+
+	MuzzleFlashComponent->SetWorldScale3D(FVector(0.1f, 0.1f, 0.1f));
+	MuzzleFlashComponent->SetRelativeLocation_Direct(FVector(50, 0, 0));
+
+	SpawnProjectile();
 }
 
 void AGunActor::SetMaxBulletsCount(int32 Value)

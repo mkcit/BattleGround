@@ -15,6 +15,8 @@ void ASoldierCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	PlayerController = Cast<ASoldierPlayerController>(GetController());
+
 	StoreCameras();
 
 	GunActor = GetWorld()->SpawnActor<AGunActor>(GunActorClass);
@@ -22,22 +24,12 @@ void ASoldierCharacter::BeginPlay()
 	{
 		GunActor->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, FName("GunSocket"));
 		GunActor->SetOwner(this);
+
+		CurrentBulletsCount = GunActor->GetMaxBulletsCount();
+		CurrentBulletsCountInMagazine=GunActor->GetMaxCountBulletsInMagazine();
 	}
 
 
-	/*APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	if (PlayerController)
-	{
-		ASoldierPlayerController* SoldierPlayerController = Cast< ASoldierPlayerController>(PlayerController);
-		if (SoldierPlayerController)
-		{
-			Image_Up = SoldierPlayerController->GetImageByName("Image_Up");
-			Image_Down = SoldierPlayerController->GetImageByName("Image_Down");
-			Image_Right = SoldierPlayerController->GetImageByName("Image_Right");
-			Image_Left = SoldierPlayerController->GetImageByName("Image_Left");
-		}
-	}*/
-	
 }
 
 // Called every frame
@@ -45,20 +37,7 @@ void ASoldierCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//if (!Image_Up || !Image_Down || !Image_Right || !Image_Left) return;
-	//if(GunActor)
-	//{
-	//	ScreenLocation = GunActor->GetScreenLocation();
-	//	//UE_LOG(LogTemp, Warning, TEXT("%s"), *ScreenLocation.ToString());
-	//	/*ScreenLocation.X = 700;
-	//	ScreenLocation.Y = 100;*/
-
-	//	/*Image_Up->SetRenderTranslation(ScreenLocation);
-	//	Image_Down->SetRenderTranslation(ScreenLocation);
-
-	//	Image_Right->SetRenderTranslation(ScreenLocation);
-	//	Image_Left->SetRenderTranslation(ScreenLocation);*/
-	//}
+	FireGun();
 }
 
 // Called to bind functionality to input
@@ -157,10 +136,12 @@ void ASoldierCharacter::LeaveWeapon()
 
 void ASoldierCharacter::PullTrigger()
 {
+	IsAutoGunTriggerPulled = true;
 }
 
 void ASoldierCharacter::LeaveTrigger()
 {
+	IsAutoGunTriggerPulled = false;
 }
 
 void ASoldierCharacter::ReloadGunMagazine()
@@ -178,6 +159,33 @@ void ASoldierCharacter::Crouch()
 	{
 		DefaultCharacterMovementSpeedRate = 0.5f;
 	}
+}
+
+void ASoldierCharacter::FireGun()
+{
+	// If Auto Gun is Picked
+	
+	if (IsAutoGunTriggerPulled)
+	{
+		if (GunActor)
+		{
+			CurrentSecond = GetWorld()->GetTimeSeconds();
+			if ((CurrentSecond - LastSecond) >= GunActor->GetAutoFireRate())
+			{
+				if (CurrentBulletsCountInMagazine > 0)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("PullTrigger"));
+					PlayerController->PlayerCameraManager->PlayCameraShake(CameraShakeClass);
+					GunActor->PullTrigger();
+					CurrentBulletsCountInMagazine--;
+				}
+				LastSecond = CurrentSecond;
+
+				ShowBulletsCountOnScreen();
+			}
+		}
+	}
+
 }
 
 AGunActor* ASoldierCharacter::GetGunActor()
@@ -305,4 +313,19 @@ FRotator ASoldierCharacter::GetBoneRotation() const
 	FRotator BoneRotation(0, 0, BoneRotatonAngle);
 
 	return BoneRotation;
+}
+
+void ASoldierCharacter::ShowBulletsCountOnScreen()
+{
+	if (PlayerController)
+	{
+
+		UTextBlock* MaxBulletsCountTextBlock = PlayerController->GetTextBlockByName("MaxBulletsCount");
+		UTextBlock* MaxCountBulletsInArmoryTextBlock = PlayerController->GetTextBlockByName("MaxCountBulletsInMagazine");
+		if (MaxBulletsCountTextBlock && MaxCountBulletsInArmoryTextBlock && GunActor)
+		{
+			MaxBulletsCountTextBlock->SetText(FText::AsNumber(CurrentBulletsCount));
+			MaxCountBulletsInArmoryTextBlock->SetText(FText::AsNumber(CurrentBulletsCountInMagazine));
+		}
+	}
 }

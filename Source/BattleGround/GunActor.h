@@ -21,6 +21,8 @@ public:
 	AGunActor();
 
 	virtual void Tick(float DeltaTime) override;
+
+	void SetupGunDirection();
 	
 	void SpawnProjectile();
 	void PullTrigger();

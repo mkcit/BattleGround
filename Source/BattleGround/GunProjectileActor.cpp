@@ -14,6 +14,9 @@ AGunProjectileActor::AGunProjectileActor()
 
 	SetRootComponent(Projectile);
 
+	ProjectileMovement->InitialSpeed = 3500;
+	ProjectileMovement->MaxSpeed = 3500;
+
 
 }
 

@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "SoldierPlayerController.h"
 #include "Components/Image.h"
 #include "GunActor.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -32,6 +33,7 @@ public:
 	void LeaveTrigger();
 	void ReloadGunMagazine();
 	void Crouch();
+	void FireGun();
 
 	AGunActor* GetGunActor();
 
@@ -76,11 +78,16 @@ private:
 	void StoreCameras();
 	void DeActivateAllCameras(); 
 	void CalculateTheAngle();
+	void ShowBulletsCountOnScreen();
 	float* GetSpeedFactor();
 
 	bool IsIncreasingCharacterMovementSpeedRate = false;
 	bool IsDecreasingCharacterMovementSpeedRate = false;
 	bool IsSoldierCharacterCrouchingNow = false;
+	bool IsAutoGunTriggerPulled = false;
+
+	float CurrentSecond = 0.f;
+	float LastSecond = 0.f;
 
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
@@ -89,8 +96,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	float DefaultCharacterRotationSpeedRate = 9.f;
 
-	float CharacterMovementSpeedRate;
-	float BoneRotatonAngle;
 
 	UFUNCTION(BlueprintPure)
 	FVector2D GetScreenPosition();
@@ -100,10 +105,17 @@ private:
 	UCameraComponent* const* DownSightViewCamera = nullptr;
 	TMap<FName, UCameraComponent*> Cameras;
 
-	UImage* Image_Up = nullptr;
-	UImage* Image_Down = nullptr;
-	UImage* Image_Right = nullptr;
-	UImage* Image_Left = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<UCameraShake> CameraShakeClass;
+
+	ASoldierPlayerController* PlayerController = nullptr;
 	FVector2D ScreenLocation;
+
+
+	float CharacterMovementSpeedRate;
+	float BoneRotatonAngle;
+
+	int32 CurrentBulletsCount;
+	int32 CurrentBulletsCountInMagazine;
 };
