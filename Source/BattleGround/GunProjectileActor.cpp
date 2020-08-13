@@ -17,25 +17,31 @@ AGunProjectileActor::AGunProjectileActor()
 	ProjectileMovement->InitialSpeed = 3500;
 	ProjectileMovement->MaxSpeed = 3500;
 
-
+	
+	
 }
 
 // Called when the game starts or when spawned
 void AGunProjectileActor::BeginPlay()
 {
 	Super::BeginPlay();
-
+	Projectile->OnComponentHit.AddDynamic(this, &AGunProjectileActor::OnHit);
 }
 
 // Called every frame
 void AGunProjectileActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 UProjectileMovementComponent* AGunProjectileActor::GetProjectileMovement()
 {
 	return ProjectileMovement;
+}
+
+void AGunProjectileActor::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	//UE_LOG(LogTemp,Warning,TEXT("Hit %s"), *HitComp->GetName())
+	Destroy();
 }
 

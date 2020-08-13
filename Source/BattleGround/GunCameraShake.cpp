@@ -6,8 +6,8 @@
 UGunCameraShake::UGunCameraShake()
 {
 	OscillationDuration = 0.2;
-	OscillationBlendInTime = 0.05;
-	OscillationBlendOutTime = 0.05;
+	OscillationBlendInTime = 0.1;
+	OscillationBlendOutTime = 0.1;
 
 	RotOscillation.Pitch.Amplitude = FMath::RandRange(1.f, 3.f);
 	RotOscillation.Pitch.Frequency = FMath::RandRange(1.f, 3.f);

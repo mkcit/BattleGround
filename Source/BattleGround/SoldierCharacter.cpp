@@ -174,7 +174,7 @@ void ASoldierCharacter::FireGun()
 			{
 				if (CurrentBulletsCountInMagazine > 0)
 				{
-					UE_LOG(LogTemp, Warning, TEXT("PullTrigger"));
+					//UE_LOG(LogTemp, Warning, TEXT("PullTrigger"));
 					PlayerController->PlayerCameraManager->PlayCameraShake(CameraShakeClass);
 					GunActor->PullTrigger();
 					CurrentBulletsCountInMagazine--;

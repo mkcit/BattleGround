@@ -42,14 +42,14 @@ void AGunActor::SetupGunDirection()
 		FVector Direction = Mesh->GetSocketTransform(FName("Muzzle")).GetRotation().Vector();
 		FVector OUT LineEnd = LineStart + Direction * 60000;
 
-		DrawDebugLine(GetWorld(), LineStart, LineEnd, FColor::Red, false, 0.f, 0, 2.f);
+		//DrawDebugLine(GetWorld(), LineStart, LineEnd, FColor::Red, false, 0.f, 0, 2.f);
 		FHitResult Hit;
-		bool Success = GetWorld()->LineTraceSingleByChannel(Hit, LineStart, LineEnd, ECollisionChannel::ECC_GameTraceChannel1);
+		bool Success = GetWorld()->LineTraceSingleByChannel(Hit, LineStart, LineEnd, ECollisionChannel::ECC_Visibility);
 
 		if (Success)
 		{
 			FVector HitLocation = Hit.Location;
-			UE_LOG(LogTemp, Warning, TEXT("%s"), *Hit.GetActor()->GetName());
+			//UE_LOG(LogTemp, Warning, TEXT("%s"), *Hit.GetActor()->GetName());
 			PlayerController->ProjectWorldLocationToScreen(HitLocation, ScreenLocation);
 		}
 	}
