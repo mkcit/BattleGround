@@ -62,33 +62,16 @@ void AGunActor::SpawnProjectile()
 	FVector MuzzleLocation = Mesh->GetSocketLocation(FName("Muzzle"));
 	FRotator MuzzleRotation = Mesh->GetSocketRotation(FName("Muzzle"));
 
-
 	GunProjectileActor = GetWorld()->SpawnActor<AGunProjectileActor>(GunProjectileActorClass, MuzzleLocation, MuzzleRotation);
-
-	UProjectileMovementComponent* ProjectileMovement = GunProjectileActor->GetProjectileMovement();
-	if (!ProjectileMovement) return;
-
-
-	ProjectileMovement->Activate(true);
 }
 
 void AGunActor::PullTrigger()
 {
-	/*APawn* OwnerPawn = Cast<APawn>(GetOwner());
-	if (!OwnerPawn) return;
-
-	AController* Controller = OwnerPawn->GetController();
-	if (!Controller) return;
-
-	APlayerController* PlayerController = Cast<APlayerController>(Controller);
-	if (!PlayerController) return;*/
-
-
 	UParticleSystemComponent* MuzzleFlashComponent = UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, Mesh, FName("Muzzle"));
 	if (!MuzzleFlashComponent) return;
 
 	MuzzleFlashComponent->SetWorldScale3D(FVector(0.1f, 0.1f, 0.1f));
-	MuzzleFlashComponent->SetRelativeLocation_Direct(FVector(50, 0, 0));
+	//MuzzleFlashComponent->SetRelativeLocation_Direct(FVector(50, 0, 0));
 
 	SpawnProjectile();
 }

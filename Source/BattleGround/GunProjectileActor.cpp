@@ -14,9 +14,11 @@ AGunProjectileActor::AGunProjectileActor()
 
 	SetRootComponent(Projectile);
 
-	ProjectileMovement->InitialSpeed = 3500;
-	ProjectileMovement->MaxSpeed = 3500;
-
+	ProjectileMovement->InitialSpeed = 10;
+	ProjectileMovement->MaxSpeed = 10;
+	ProjectileMovement->bRotationFollowsVelocity = true;
+	ProjectileMovement->ProjectileGravityScale = 0.1f;
+	ProjectileMovement->SetActive(true);
 	
 	
 }
@@ -41,7 +43,7 @@ UProjectileMovementComponent* AGunProjectileActor::GetProjectileMovement()
 
 void AGunProjectileActor::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//UE_LOG(LogTemp,Warning,TEXT("Hit %s"), *HitComp->GetName())
-	Destroy();
+	UE_LOG(LogTemp,Warning,TEXT("Hit %s"), *HitComp->GetName())
+	//Destroy();
 }
 
