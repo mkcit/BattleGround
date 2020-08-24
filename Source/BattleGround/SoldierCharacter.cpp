@@ -349,13 +349,5 @@ void ASoldierCharacter::ShowBulletsCountOnScreen()
 	if (PlayerController)
 	{
 		PlayerController->ShowBulletsCountOnScreen(CurrentBulletsCount, CurrentBulletsCountInMagazine);
-		
-		/*UTextBlock* Text_MaxBulletsCount = PlayerController->GetTextBlockByName("Text_MaxBulletsCount");
-		UTextBlock* Text_MaxCountBulletsInMagazine = PlayerController->GetTextBlockByName("Text_MaxCountBulletsInMagazine");
-		if (Text_MaxCountBulletsInMagazine && Text_MaxBulletsCount && GunActor)
-		{
-			Text_MaxBulletsCount->SetText(FText::AsNumber(CurrentBulletsCount));
-			Text_MaxCountBulletsInMagazine->SetText(FText::AsNumber(CurrentBulletsCountInMagazine));
-		}*/
 	}
 }
