@@ -60,7 +60,7 @@ private:
 		int32 MaxBulletsCount = 360; // 600 meter
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
-		int32 MaxCountBulletsInMagazine = 36; // 600 meter
+		int32 MaxCountBulletsInMagazine = 36; 
 
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 		TSubclassOf<AGunProjectileActor> GunProjectileActorClass;

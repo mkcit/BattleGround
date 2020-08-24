@@ -22,6 +22,9 @@ public:
 	UWidgetAnimation* GetAnimationByName(FName AnimationName) const;
 	UImage* GetImageByName(FName ImageName) const;
 	UTextBlock* GetTextBlockByName(FName TextBlockName) const;
+
+	void ShowBulletsCountOnScreen(int32 CurrentBulletsCount, int32 CurrentBulletsCountInMagazine);
+
 protected:
 	virtual void BeginPlay() override;
 

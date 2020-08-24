@@ -32,6 +32,7 @@ public:
 	void PullTrigger();
 	void LeaveTrigger();
 	void ReloadGunMagazine();
+	void StopReloadingMagazine();
 	void Crouch();
 	void FireGun();
 
@@ -85,6 +86,8 @@ private:
 	bool IsDecreasingCharacterMovementSpeedRate = false;
 	bool IsSoldierCharacterCrouchingNow = false;
 	bool IsAutoGunTriggerPulled = false;
+	bool ReloadingMagazineNow = false;
+
 
 	float CurrentSecond = 0.f;
 	float LastSecond = 0.f;

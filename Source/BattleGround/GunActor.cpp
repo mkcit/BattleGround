@@ -38,16 +38,17 @@ void AGunActor::SetupGunDirection()
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	if (PlayerController)
 	{
-		FVector OUT LineStart = Mesh->GetSocketTransform(FName("Muzzle")).GetLocation();
-		FVector Direction = Mesh->GetSocketTransform(FName("Muzzle")).GetRotation().Vector();
+		FVector OUT LineStart = Mesh->GetSocketTransform(FName("StartLine")).GetLocation();
+		FVector Direction = Mesh->GetSocketTransform(FName("StartLine")).GetRotation().Vector();
 		FVector OUT LineEnd = LineStart + Direction * 60000;
 
-		//DrawDebugLine(GetWorld(), LineStart, LineEnd, FColor::Red, false, 0.f, 0, 2.f);
+		
 		FHitResult Hit;
-		bool Success = GetWorld()->LineTraceSingleByChannel(Hit, LineStart, LineEnd, ECollisionChannel::ECC_Visibility);
+		bool Success = GetWorld()->LineTraceSingleByChannel(Hit, LineStart, LineEnd, ECollisionChannel::ECC_GameTraceChannel1);
 
 		if (Success)
 		{
+			//DrawDebugLine(GetWorld(), LineStart, LineEnd, FColor::Red, true, 0.f, 0, 2.f);
 			FVector HitLocation = Hit.Location;
 			//UE_LOG(LogTemp, Warning, TEXT("%s"), *Hit.GetActor()->GetName());
 			PlayerController->ProjectWorldLocationToScreen(HitLocation, ScreenLocation);
@@ -63,6 +64,8 @@ void AGunActor::SpawnProjectile()
 	FRotator MuzzleRotation = Mesh->GetSocketRotation(FName("Muzzle"));
 
 	GunProjectileActor = GetWorld()->SpawnActor<AGunProjectileActor>(GunProjectileActorClass, MuzzleLocation, MuzzleRotation);
+	
+	//GunProjectileActor->SetActorRotation(FRotator(90, 90, 90));
 }
 
 void AGunActor::PullTrigger()

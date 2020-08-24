@@ -26,7 +26,24 @@ UImage* ASoldierPlayerController::GetImageByName(FName ImageName) const
 
 UTextBlock* ASoldierPlayerController::GetTextBlockByName(FName TextBlockName) const
 {
+    UTextBlock* const* WidgetTextBlock = TextBlocksMap.Find(TextBlockName);
+
+    if (WidgetTextBlock != nullptr)
+        return *WidgetTextBlock;
+
     return nullptr;
+}
+
+void ASoldierPlayerController::ShowBulletsCountOnScreen(int32 CurrentBulletsCount, int32 CurrentBulletsCountInMagazine)
+{
+    UTextBlock* Text_MaxBulletsCount = GetTextBlockByName("Text_MaxBulletsCount");
+    UTextBlock* Text_MaxCountBulletsInMagazine = GetTextBlockByName("Text_MaxCountBulletsInMagazine");
+    
+    if (Text_MaxCountBulletsInMagazine && Text_MaxBulletsCount)
+    {
+        Text_MaxBulletsCount->SetText(FText::AsNumber(CurrentBulletsCount));
+        Text_MaxCountBulletsInMagazine->SetText(FText::AsNumber(CurrentBulletsCountInMagazine));
+    }
 }
 
 void ASoldierPlayerController::RemoveAllWidgets()

@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "Particles/ParticleSystemComponent.h"
+#include "Particles/ParticleSystem.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
@@ -27,14 +29,17 @@ public:
 
 
 private:
-	UPROPERTY(EditAnywhere)
-	USceneComponent* Root = nullptr;
+	/*UPROPERTY(EditAnywhere)
+	USceneComponent* Root = nullptr;*/
 
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* Projectile = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	UProjectileMovementComponent* ProjectileMovement = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* ProjectileCollisionEmitter = nullptr;
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

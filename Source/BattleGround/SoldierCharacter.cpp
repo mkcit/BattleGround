@@ -26,7 +26,7 @@ void ASoldierCharacter::BeginPlay()
 		GunActor->SetOwner(this);
 
 		CurrentBulletsCount = GunActor->GetMaxBulletsCount();
-		CurrentBulletsCountInMagazine=GunActor->GetMaxCountBulletsInMagazine();
+		CurrentBulletsCountInMagazine = GunActor->GetMaxCountBulletsInMagazine();
 	}
 
 
@@ -146,6 +146,34 @@ void ASoldierCharacter::LeaveTrigger()
 
 void ASoldierCharacter::ReloadGunMagazine()
 {
+	ReloadingMagazineNow = true;
+
+	FTimerHandle OUT TimerHandle;
+	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ASoldierCharacter::StopReloadingMagazine, 3.f, false);
+}
+
+void ASoldierCharacter::StopReloadingMagazine()
+{
+	ReloadingMagazineNow = false;
+
+	if (GunActor)
+	{
+		int32 NeededBullets = GunActor->GetMaxCountBulletsInMagazine() - CurrentBulletsCountInMagazine;
+		if (CurrentBulletsCount >= NeededBullets)
+		{
+			CurrentBulletsCountInMagazine += NeededBullets;
+			CurrentBulletsCount -= NeededBullets;
+		}
+		else if (CurrentBulletsCount > 0 && CurrentBulletsCount < NeededBullets)
+		{
+			CurrentBulletsCountInMagazine += NeededBullets;
+			CurrentBulletsCount = 0;
+		}
+
+		ShowBulletsCountOnScreen();
+	}
+
 }
 
 void ASoldierCharacter::Crouch()
@@ -181,7 +209,7 @@ void ASoldierCharacter::FireGun()
 				}
 				LastSecond = CurrentSecond;
 
-				/*ShowBulletsCountOnScreen();*/
+				ShowBulletsCountOnScreen();
 			}
 		}
 	}
@@ -317,15 +345,17 @@ FRotator ASoldierCharacter::GetBoneRotation() const
 
 void ASoldierCharacter::ShowBulletsCountOnScreen()
 {
+
 	if (PlayerController)
 	{
-
-		UTextBlock* MaxBulletsCountTextBlock = PlayerController->GetTextBlockByName("MaxBulletsCount");
-		UTextBlock* MaxCountBulletsInArmoryTextBlock = PlayerController->GetTextBlockByName("MaxCountBulletsInMagazine");
-		if (MaxBulletsCountTextBlock && MaxCountBulletsInArmoryTextBlock && GunActor)
+		PlayerController->ShowBulletsCountOnScreen(CurrentBulletsCount, CurrentBulletsCountInMagazine);
+		
+		/*UTextBlock* Text_MaxBulletsCount = PlayerController->GetTextBlockByName("Text_MaxBulletsCount");
+		UTextBlock* Text_MaxCountBulletsInMagazine = PlayerController->GetTextBlockByName("Text_MaxCountBulletsInMagazine");
+		if (Text_MaxCountBulletsInMagazine && Text_MaxBulletsCount && GunActor)
 		{
-			MaxBulletsCountTextBlock->SetText(FText::AsNumber(CurrentBulletsCount));
-			MaxCountBulletsInArmoryTextBlock->SetText(FText::AsNumber(CurrentBulletsCountInMagazine));
-		}
+			Text_MaxBulletsCount->SetText(FText::AsNumber(CurrentBulletsCount));
+			Text_MaxCountBulletsInMagazine->SetText(FText::AsNumber(CurrentBulletsCountInMagazine));
+		}*/
 	}
 }
