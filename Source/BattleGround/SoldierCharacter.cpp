@@ -146,34 +146,36 @@ void ASoldierCharacter::LeaveTrigger()
 
 void ASoldierCharacter::ReloadGunMagazine()
 {
-	ReloadingMagazineNow = true;
+	if (GunActor)
+	{
+		int32 NeededBulletsToFillMagazine = GunActor->GetMaxCountBulletsInMagazine() - CurrentBulletsCountInMagazine;
+		
+		if (NeededBulletsToFillMagazine > 0)
+		{
+			if (CurrentBulletsCount >= NeededBulletsToFillMagazine)
+			{
+				ReloadingMagazineNow = true;
+				CurrentBulletsCountInMagazine += NeededBulletsToFillMagazine;
+				CurrentBulletsCount -= NeededBulletsToFillMagazine;
+			}
+			else if (CurrentBulletsCount > 0 && CurrentBulletsCount < NeededBulletsToFillMagazine)
+			{
+				ReloadingMagazineNow = true;
+				CurrentBulletsCountInMagazine += NeededBulletsToFillMagazine;
+				CurrentBulletsCount = 0;
+			}
 
-	FTimerHandle OUT TimerHandle;
-	GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ASoldierCharacter::StopReloadingMagazine, 3.f, false);
+			FTimerHandle OUT TimerHandle;
+			GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+			GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ASoldierCharacter::StopReloadingMagazine, 3.f, false);
+		}
+	}
 }
 
 void ASoldierCharacter::StopReloadingMagazine()
 {
 	ReloadingMagazineNow = false;
-
-	if (GunActor)
-	{
-		int32 NeededBullets = GunActor->GetMaxCountBulletsInMagazine() - CurrentBulletsCountInMagazine;
-		if (CurrentBulletsCount >= NeededBullets)
-		{
-			CurrentBulletsCountInMagazine += NeededBullets;
-			CurrentBulletsCount -= NeededBullets;
-		}
-		else if (CurrentBulletsCount > 0 && CurrentBulletsCount < NeededBullets)
-		{
-			CurrentBulletsCountInMagazine += NeededBullets;
-			CurrentBulletsCount = 0;
-		}
-
-		ShowBulletsCountOnScreen();
-	}
-
+	ShowBulletsCountOnScreen();
 }
 
 void ASoldierCharacter::Crouch()
@@ -239,6 +241,11 @@ float ASoldierCharacter::GetSoldierCharacterAngle()
 bool ASoldierCharacter::GetIfSoldierCharacterIsCrouchingNow()
 {
 	return IsSoldierCharacterCrouchingNow;
+}
+
+bool ASoldierCharacter::GetIfSoldierCharacterIsReloadingNow()
+{
+	return ReloadingMagazineNow;
 }
 
 void ASoldierCharacter::ShowFirstPersonView()

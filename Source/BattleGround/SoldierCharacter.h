@@ -64,6 +64,9 @@ private:
 	UFUNCTION(BlueprintPure)
 	bool GetIfSoldierCharacterIsCrouchingNow();
 
+	UFUNCTION(BlueprintPure)
+	bool GetIfSoldierCharacterIsReloadingNow();
+
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AGunActor> GunActorClass;
 
