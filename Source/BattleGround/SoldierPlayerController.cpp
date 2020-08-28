@@ -5,7 +5,7 @@ void ASoldierPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ShowWidgetOnScreen(GunWidget, GunWidgetClass, false);
+    ShowGunWidget();
 }
 
 
@@ -46,19 +46,9 @@ void ASoldierPlayerController::ShowBulletsCountOnScreen(int32 CurrentBulletsCoun
     }
 }
 
-void ASoldierPlayerController::RemoveAllWidgets()
-{
-	if (GunWidget) 
-	{
-		if (GunWidget->IsInViewport())
-			GunWidget->RemoveFromViewport();
-	}
-
-}
-
 void ASoldierPlayerController::ShowWidgetOnScreen(UUserWidget* Widget, TSubclassOf<UUserWidget> WidgetClass, bool SavePreviousWidget)
 {
-	if (!SavePreviousWidget)
+	/*if (!SavePreviousWidget)
 		RemoveAllWidgets();
 
 	Widget = CreateWidget(this, WidgetClass);
@@ -66,7 +56,7 @@ void ASoldierPlayerController::ShowWidgetOnScreen(UUserWidget* Widget, TSubclass
 	{
 		Widget->AddToViewport();
         StoreObjectsInWidget(Widget);
-	}
+	}*/
 }
 
 void ASoldierPlayerController::StoreObjectsInWidget(UUserWidget* Widget)
@@ -129,4 +119,48 @@ void ASoldierPlayerController::StoreObjectsInWidget(UUserWidget* Widget)
         Property = Property->PropertyLinkNext;
     }
 
+}
+
+void ASoldierPlayerController::ShowGunWidget()
+{
+    if (LauncherMissileSystemWidget)
+    {
+        if (LauncherMissileSystemWidget->IsInViewport())
+            LauncherMissileSystemWidget->RemoveFromViewport();
+
+        LauncherMissileSystemWidget = nullptr;
+    }
+    
+    if (!GunWidget)
+    {
+        GunWidget = CreateWidget(this, GunWidgetClass);
+        if (GunWidget)
+        {
+            GunWidget->AddToViewport();
+            StoreObjectsInWidget(GunWidget);
+        }
+    }
+    
+}
+
+void ASoldierPlayerController::ShowLauncherMissileSystemWidget()
+{
+    if (GunWidget)
+    {
+        if (GunWidget->IsInViewport())
+            GunWidget->RemoveFromViewport();
+
+        GunWidget = nullptr;
+    }
+
+    if (!LauncherMissileSystemWidget)
+    {
+        LauncherMissileSystemWidget = CreateWidget(this, LauncherMissileSystemWidgetClass);
+        if (LauncherMissileSystemWidget)
+        {
+            LauncherMissileSystemWidget->AddToViewport();
+            StoreObjectsInWidget(LauncherMissileSystemWidget);
+        }
+    }
+    //ShowWidgetOnScreen(LauncherMissileSystemWidget, LauncherMissileSystemWidgetClass, false);
 }

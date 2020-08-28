@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
+#include "KornetSystemActor.h"
 #include "SoldierPlayerController.h"
 #include "Components/Image.h"
 #include "GunActor.h"
@@ -90,6 +91,8 @@ private:
 	bool IsSoldierCharacterCrouchingNow = false;
 	bool IsAutoGunTriggerPulled = false;
 	bool ReloadingMagazineNow = false;
+	bool IsSoldierInGunArea = false;
+	bool CanControlOverlappingActor = false;
 
 
 	float CurrentSecond = 0.f;
@@ -124,4 +127,7 @@ private:
 
 	int32 CurrentBulletsCount;
 	int32 CurrentBulletsCountInMagazine;
+
+	UPrimitiveComponent* PrimitiveOverlappingComponent = nullptr; 
+	AKornetSystemActor* KornetSystemActor = nullptr;
 };

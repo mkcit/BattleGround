@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-#include "SoldierPlayerController.h"
 #include "SoldierCharacter.h"
+#include "SoldierPlayerController.h"
+
 
 // Sets default values
 ASoldierCharacter::ASoldierCharacter()
@@ -38,6 +38,19 @@ void ASoldierCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	FireGun();
+
+	//if other actor overlapped by pawn
+	PrimitiveOverlappingComponent = nullptr;
+	TArray<UPrimitiveComponent*> OverlappingComponents;
+	GetOverlappingComponents(OverlappingComponents);
+	IsSoldierInGunArea = false;
+	for (int i = 0; i < OverlappingComponents.Num(); i++) {
+		IsSoldierInGunArea = true;
+		PrimitiveOverlappingComponent = OverlappingComponents[i];
+		//UE_LOG(LogTemp, Warning, TEXT("%s"), *PrimitiveOverlappingComponent->GetName());
+	}
+	//connect other with pawn
+
 }
 
 // Called to bind functionality to input
@@ -81,13 +94,40 @@ void ASoldierCharacter::MoveRight(float AxisValue)
 
 void ASoldierCharacter::LookUp(float AxisValue)
 {
-	AddControllerPitchInput(AxisValue * DefaultCharacterRotationSpeedRate * GetWorld()->GetDeltaSeconds());
-	CalculateTheAngle();
+	if (CanControlOverlappingActor && KornetSystemActor)
+	{
+		USceneComponent* UpDownScene = KornetSystemActor->GetUpDownScene();
+		if (UpDownScene && KornetSystemActor)
+		{
+			UpDownScene->AddLocalRotation(FRotator(AxisValue * DefaultCharacterRotationSpeedRate * GetWorld()->GetDeltaSeconds() * -1, 0, 0));
+			KornetSystemActor->ActiveNavigatorSystem();
+		}
+	}
+	else
+	{
+		AddControllerPitchInput(AxisValue * DefaultCharacterRotationSpeedRate * GetWorld()->GetDeltaSeconds());
+		CalculateTheAngle();
+	}
+	
 }
 
 void ASoldierCharacter::LookRight(float AxisValue)
 {
-	AddControllerYawInput(AxisValue * DefaultCharacterRotationSpeedRate * GetWorld()->GetDeltaSeconds());
+	if (CanControlOverlappingActor && KornetSystemActor)
+	{
+		//UStaticMeshComponent* VisionSystem = KornetSystemActor->GetVisionSystem();
+		USceneComponent* RightLeftScene = KornetSystemActor->GetRightLeftScene();
+		if (RightLeftScene && KornetSystemActor)
+		{
+			RightLeftScene->AddLocalRotation(FRotator(0, AxisValue * DefaultCharacterRotationSpeedRate * GetWorld()->GetDeltaSeconds(), 0));
+
+			KornetSystemActor->ActiveNavigatorSystem();
+		}
+	}
+	else
+	{
+		AddControllerYawInput(AxisValue * DefaultCharacterRotationSpeedRate * GetWorld()->GetDeltaSeconds());
+	}
 }
 
 void ASoldierCharacter::IncreaseMovementRate(float AxisValue)
@@ -128,15 +168,40 @@ void ASoldierCharacter::DecreaseMovementRate(float AxisValue)
 
 void ASoldierCharacter::PickUpWeapon()
 {
+	if (IsSoldierInGunArea && PrimitiveOverlappingComponent)
+	{
+		AActor* Actor = PrimitiveOverlappingComponent->GetOwner();
+		KornetSystemActor = Cast< AKornetSystemActor>(Actor);
+		if (KornetSystemActor && PlayerController)
+		{
+			PlayerController->ShowLauncherMissileSystemWidget();
+			PlayerController->SetViewTargetWithBlend(KornetSystemActor);
+			CanControlOverlappingActor = true;
+		}
+	}
 }
 
 void ASoldierCharacter::LeaveWeapon()
 {
+	if (PlayerController)
+	{
+		PlayerController->ShowGunWidget();
+		PlayerController->SetViewTargetWithBlend(this);
+		CanControlOverlappingActor = false;
+	}
 }
 
 void ASoldierCharacter::PullTrigger()
 {
-	IsAutoGunTriggerPulled = true;
+	if (!CanControlOverlappingActor)
+		IsAutoGunTriggerPulled = true;
+	else
+	{
+		if (KornetSystemActor)
+		{
+			KornetSystemActor->Fire();
+		}
+	}
 }
 
 void ASoldierCharacter::LeaveTrigger()
@@ -197,7 +262,7 @@ void ASoldierCharacter::FireGun()
 	
 	if (IsAutoGunTriggerPulled)
 	{
-		if (GunActor)
+		if ( !CanControlOverlappingActor && GunActor)
 		{
 			CurrentSecond = GetWorld()->GetTimeSeconds();
 			if ((CurrentSecond - LastSecond) >= GunActor->GetAutoFireRate())
@@ -215,7 +280,7 @@ void ASoldierCharacter::FireGun()
 			}
 		}
 	}
-
+	
 }
 
 AGunActor* ASoldierCharacter::GetGunActor()
@@ -281,6 +346,14 @@ void ASoldierCharacter::ShowDownSightView()
 
 void ASoldierCharacter::ShowMissileView()
 {
+	if (KornetSystemActor)
+	{
+		AKornetMissileActor* Missile = KornetSystemActor->GetLastFiredMissile();
+		if (Missile && PlayerController)
+		{
+			PlayerController->SetViewTargetWithBlend(Missile);
+		}
+	}
 }
 
 /*****************************************************/

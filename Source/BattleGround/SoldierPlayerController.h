@@ -19,6 +19,9 @@ class BATTLEGROUND_API ASoldierPlayerController : public APlayerController
 
 
 public:
+	void ShowGunWidget();
+	void ShowLauncherMissileSystemWidget();
+
 	UWidgetAnimation* GetAnimationByName(FName AnimationName) const;
 	UImage* GetImageByName(FName ImageName) const;
 	UTextBlock* GetTextBlockByName(FName TextBlockName) const;
@@ -31,7 +34,6 @@ protected:
 	
 
 private:
-	void RemoveAllWidgets();
 	void ShowWidgetOnScreen(UUserWidget* Widget, TSubclassOf<UUserWidget> WidgetClass, bool SavePreviousWidget); 
 	void StoreObjectsInWidget(UUserWidget* Widget);
 
@@ -39,9 +41,13 @@ private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UUserWidget> GunWidgetClass;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UUserWidget> LauncherMissileSystemWidgetClass;
+
 	TMap<FName, UImage*> ImagesMap;
 	TMap<FName, UWidgetAnimation*> AnimationsMap;
 	TMap<FName, UTextBlock*> TextBlocksMap;
 
 	UUserWidget* GunWidget = nullptr;
+	UUserWidget* LauncherMissileSystemWidget = nullptr;
 };

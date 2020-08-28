@@ -33,7 +33,9 @@ AGunProjectileActor::AGunProjectileActor()
 void AGunProjectileActor::BeginPlay()
 {
 	Super::BeginPlay();
-	Projectile->OnComponentHit.AddDynamic(this, &AGunProjectileActor::OnHit);
+	
+	if(Projectile)
+		Projectile->OnComponentHit.AddDynamic(this, &AGunProjectileActor::OnHit);
 }
 
 // Called every frame
