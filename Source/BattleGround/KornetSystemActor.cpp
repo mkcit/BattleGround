@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "TimerManager.h"
 #include "KornetSystemActor.h"
 
 // Sets default values
@@ -46,22 +46,32 @@ void AKornetSystemActor::Fire()
 {
 	if (Container)
 	{
-		if (!FrontCover || !BackCover) return;
+		OpenContainerCovers();
 
-		FrontCover->SetSimulatePhysics(true);
-		BackCover->SetSimulatePhysics(true);
-
-		FVector Impulse = FrontCover->GetForwardVector() * 800;
-
-		FrontCover->AddImpulse(Impulse);
-		BackCover->AddImpulse(Impulse * (-1));
-
-		FTransform MissileSocketTransofrmation = Container->GetSocketTransform(FName("Missile Socket"));
-
-		KorneMissileActor = GetWorld()->SpawnActor<AKornetMissileActor>(KornetMissileActorClass, MissileSocketTransofrmation);
-
+		FTimerHandle Timer;
+		GetWorld()->GetTimerManager().SetTimer(Timer, this, &AKornetSystemActor::FireMissile, 0.5f, false);
 	}
 	
+}
+
+void AKornetSystemActor::FireMissile()
+{
+	FTransform MissileSocketTransofrmation = Container->GetSocketTransform(FName("Missile Socket"));
+
+	KorneMissileActor = GetWorld()->SpawnActor<AKornetMissileActor>(KornetMissileActorClass, MissileSocketTransofrmation);
+}
+
+void AKornetSystemActor::OpenContainerCovers()
+{
+	if (!FrontCover || !BackCover) return;
+
+	FrontCover->SetSimulatePhysics(true);
+	BackCover->SetSimulatePhysics(true);
+
+	FVector Impulse = FrontCover->GetForwardVector() * 1200;
+
+	FrontCover->AddImpulse(Impulse);
+	BackCover->AddImpulse(Impulse * (-1));
 }
 
 USceneComponent* AKornetSystemActor::GetRightLeftScene()
@@ -100,27 +110,8 @@ void AKornetSystemActor::ActiveNavigatorSystem()
 	
 	if (Success)
 	{
-		DrawDebugLine(GetWorld(), LineStart, LineEnd, FColor::Red, false, 0.f, 0, 2.f);
-		DrawDebugPoint(GetWorld(), Hit.Location, 10, FColor::Green, false);
-
-		AActor* HitActor = Hit.GetActor();
-		if (KorneMissileActor && !KorneMissileActor->IsActorBeingDestroyed() && HitActor != KorneMissileActor)
-		{
-
-			FVector TargetLocation = Hit.Location;
-			UE_LOG(LogTemp, Warning, TEXT("Target Location = %s"), *TargetLocation.ToString());
-
-			FVector MissileLocation = KorneMissileActor->GetActorLocation();
-			UE_LOG(LogTemp, Warning, TEXT("Missile Location = %s"), *MissileLocation.ToString());
-
-			FRotator TargetRotation = ((TargetLocation - MissileLocation).GetSafeNormal()).Rotation();
-			FRotator MissileRotation = KorneMissileActor->GetActorForwardVector().Rotation();
-			FRotator DeltaRotation = TargetRotation - MissileRotation;
-
-			if (FMath::Abs(DeltaRotation.Yaw) <= MaxRotationAngleRange && FMath::Abs(DeltaRotation.Pitch) <= MaxRotationAngleRange && KorneMissileActor)
-				KorneMissileActor->AddActorWorldRotation(DeltaRotation);
-
-		}
+		if (KorneMissileActor && Hit.GetActor() != KorneMissileActor)
+			KorneMissileActor->GuidMissile(Hit.Location);
 	}
 }
 

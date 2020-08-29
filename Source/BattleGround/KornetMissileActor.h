@@ -2,6 +2,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once	
+#include "PhysicsEngine/RadialForceComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Camera/CameraComponent.h"
@@ -29,7 +30,7 @@ public:
 
 	UCameraComponent* GetCamera();
 
-	void GuidMissile(FVector Direction);
+	void GuidMissile(FVector Target);
 
 private:
 	UPROPERTY(VisibleDefaultsOnly)
@@ -49,10 +50,17 @@ private:
 	float MovementSpeedRate = 2500.f;
 
 	UPROPERTY(EditAnywhere)
+	float MaxRotationAngleRange = 25.f;
+
+
+	UPROPERTY(EditAnywhere)
 	UParticleSystem* MissileCollisionEmitter = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	UProjectileMovementComponent* ProjectileMovement = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	URadialForceComponent* RadialForceComponent = nullptr;
 
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);

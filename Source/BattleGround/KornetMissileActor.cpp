@@ -13,6 +13,7 @@ AKornetMissileActor::AKornetMissileActor()
 	Missile = CreateDefaultSubobject<UStaticMeshComponent>(FName("Missile"));
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(FName("SpringArm"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(FName("Camera"));
+	RadialForceComponent = CreateDefaultSubobject<URadialForceComponent>(FName("Radial Force"));
 
 	//ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile Movment"));
 
@@ -23,6 +24,12 @@ AKornetMissileActor::AKornetMissileActor()
 	SetRootComponent(Missile);
 	SpringArm->SetupAttachment(Missile);
 	Camera->SetupAttachment(SpringArm);
+	RadialForceComponent->SetupAttachment(Missile);
+
+	RadialForceComponent->bIgnoreOwningActor = true;
+	RadialForceComponent->Radius = 3000.f;
+	RadialForceComponent->ImpulseStrength = 20000.f;
+
 }
 
 // Called when the game starts or when spawned
@@ -42,7 +49,7 @@ void AKornetMissileActor::Tick(float DeltaTime)
 	if (Missile)
 	{
 		FVector DeltaLocation = Missile->GetForwardVector() * DeltaTime * MovementSpeedRate;
-		FRotator DeltaRotation(0, 0, DeltaTime * RotationSpeedRate);
+		//FRotator DeltaRotation(0, 0, DeltaTime * RotationSpeedRate);
 
 		Missile->AddWorldOffset(DeltaLocation);
 		//Missile->AddLocalRotation(DeltaRotation);
@@ -56,12 +63,19 @@ UCameraComponent* AKornetMissileActor::GetCamera()
 	return Camera;
 }
 
-void AKornetMissileActor::GuidMissile(FVector Direction)
+void AKornetMissileActor::GuidMissile(FVector TargetLocation)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *Direction.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("%f"), ProjectileMovement->InitialSpeed);
-	ProjectileMovement->Velocity = Direction * ProjectileMovement->InitialSpeed;
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *ProjectileMovement->Velocity.ToString());
+	if (!IsActorBeingDestroyed())
+	{
+		FVector MissileLocation = GetActorLocation();
+
+		FRotator TargetRotation = ((TargetLocation - MissileLocation).GetSafeNormal()).Rotation();
+		FRotator MissileRotation = GetActorForwardVector().Rotation();
+		FRotator DeltaRotation = TargetRotation - MissileRotation;
+
+		if (FMath::Abs(DeltaRotation.Yaw) <= MaxRotationAngleRange && FMath::Abs(DeltaRotation.Pitch) <= MaxRotationAngleRange)
+			AddActorWorldRotation(DeltaRotation);
+	}
 }
 
 void AKornetMissileActor::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -78,6 +92,9 @@ void AKornetMissileActor::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor
 	if (MissileCollisionEmitterComponent)
 		MissileCollisionEmitterComponent->SetWorldScale3D(FVector(1.f, 1.f, 1.f));
 
+	if (RadialForceComponent)
+		RadialForceComponent->FireImpulse();
+	
 	Destroy();
 }
 

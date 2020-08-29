@@ -28,6 +28,10 @@ public:
 
 	void Fire();
 
+	void FireMissile();
+
+	void OpenContainerCovers();
+
 	UStaticMeshComponent* GetVisionSystem(); 
 	USceneComponent* GetRightLeftScene();
 	USceneComponent* GetUpDownScene();
@@ -67,8 +71,6 @@ private:
 	UPROPERTY(EditAnywhere)
 	float MissileRange = 400000.f;
 
-	UPROPERTY(EditAnywhere)
-	float MaxRotationAngleRange = 25.f;
 
 	AKornetMissileActor* KorneMissileActor = nullptr;
 
