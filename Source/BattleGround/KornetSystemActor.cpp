@@ -46,10 +46,14 @@ void AKornetSystemActor::Fire()
 {
 	if (Container)
 	{
-		OpenContainerCovers();
+		if (MaxCountMissilesInContainer != 0)
+		{
+			MaxCountMissilesInContainer--;
+			OpenContainerCovers();
 
-		FTimerHandle Timer;
-		GetWorld()->GetTimerManager().SetTimer(Timer, this, &AKornetSystemActor::FireMissile, 0.5f, false);
+			FTimerHandle Timer;
+			GetWorld()->GetTimerManager().SetTimer(Timer, this, &AKornetSystemActor::FireMissile, 0.5f, false);
+		}
 	}
 	
 }

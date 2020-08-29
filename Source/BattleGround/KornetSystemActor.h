@@ -71,6 +71,11 @@ private:
 	UPROPERTY(EditAnywhere)
 	float MissileRange = 400000.f;
 
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	int32 MaxMissilesCount = 4;
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	int32 MaxCountMissilesInContainer = 1;
 
 	AKornetMissileActor* KorneMissileActor = nullptr;
 

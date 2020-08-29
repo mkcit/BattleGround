@@ -15,11 +15,7 @@ AKornetMissileActor::AKornetMissileActor()
 	Camera = CreateDefaultSubobject<UCameraComponent>(FName("Camera"));
 	RadialForceComponent = CreateDefaultSubobject<URadialForceComponent>(FName("Radial Force"));
 
-	//ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(FName("Projectile Movment"));
-
-	/*ProjectileMovement->LimitVelocity(FVector(0, 0, 1));
-	ProjectileMovement->Velocity = FVector(0, 0, 1);
-	ProjectileMovement->UpdateComponentVelocity();*/
+	RotatingMovementComponent = CreateDefaultSubobject<URotatingMovementComponent>(FName("Rotating Movment"));
 
 	SetRootComponent(Missile);
 	SpringArm->SetupAttachment(Missile);
@@ -27,8 +23,13 @@ AKornetMissileActor::AKornetMissileActor()
 	RadialForceComponent->SetupAttachment(Missile);
 
 	RadialForceComponent->bIgnoreOwningActor = true;
-	RadialForceComponent->Radius = 3000.f;
-	RadialForceComponent->ImpulseStrength = 20000.f;
+	RadialForceComponent->Radius = 1500.f;
+	RadialForceComponent->ImpulseStrength = 50000.f;
+
+	RotatingMovementComponent->SetAutoActivate(false);
+	RotatingMovementComponent->RotationRate = FRotator(0, 0, 1000);
+	RotatingMovementComponent->PivotTranslation = FVector(0, 0, 20);
+
 
 }
 
@@ -39,6 +40,15 @@ void AKornetMissileActor::BeginPlay()
 
 	if(Missile)
 		Missile->OnComponentHit.AddDynamic(this, &AKornetMissileActor::OnHit);
+
+	FTimerHandle Timer;
+	GetWorld()->GetTimerManager().SetTimer(Timer, this, &AKornetMissileActor::ActivateMissileRotation, 0.08f, false);
+}
+
+void AKornetMissileActor::ActivateMissileRotation()
+{
+	if (RotatingMovementComponent)
+		RotatingMovementComponent->Activate(true);
 }
 
 // Called every frame
